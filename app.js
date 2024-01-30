@@ -25,7 +25,7 @@ app.use(methodOverride("_method"));
 
 app.use(express.static(path.join(__dirname,"/public")));
 
-app.locals.layout = "layouts/boilerplate";
+
 
 app.get("/",(req,res)=>{
     res.send("hi i am root");
@@ -33,7 +33,7 @@ app.get("/",(req,res)=>{
 
 //indexroute
 app.get("/listings",async (req,res)=>{
-    console.log("Layout Path:", path.join(__dirname, "views/layouts/boilerplate.ejs"));
+    // console.log("Layout Path:", path.join(__dirname, "views/layouts/boilerplate.ejs"));
     const allListings = await Listing.find({});
     res.render("listings/index.ejs",{allListings});    
 });
