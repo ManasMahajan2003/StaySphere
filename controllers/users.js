@@ -1,11 +1,5 @@
 const User=require("../models/user.js");
-const Listing =require("../models/listing");
 
-module.exports.index=async (req,res)=>{
-    // console.log("Layout Path:", path.join(__dirname, "views/layouts/boilerplate.ejs"));
-    const allListings = await Listing.find({});
-    res.render("listings/index.ejs",{allListings});    
-};
 
 module.exports.renderSignupForm=(req,res)=>{
     res.render("users/signup.ejs");

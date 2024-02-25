@@ -16,6 +16,7 @@ const flash=require("connect-flash");
 const passport=require("passport");
 const LocalStrategy=require("passport-local");
 const User=require("./models/user.js");
+const Listing =require("./models/listing");
 
 const listingRouter=require("./routes/listing.js");
 const reviewRouter=require("./routes/review.js");
@@ -91,6 +92,11 @@ app.use((req,res, next)=>{
 //     let registeredUser= await User.register(fakeUser,"helloWorld");//register(user, password, cb) Convenience method to register a new user instance with a given password. Checks if username is unique.
 //     res.send(registeredUser);
 // });
+
+app.get("/",async (req,res)=>{
+    const allListings = await Listing.find({});
+    res.render("listings/index.ejs",{allListings});
+})
 
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews",reviewRouter);
