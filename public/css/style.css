@@ -11,6 +11,11 @@ body{
     height: 5rem;
     background-color: white;
 }
+.navbar-collapse.show {
+    z-index: 1000; /* Set a higher z-index */
+    background-color: #ebebeb; /* Set background color */
+    padding: 10px; /* Add padding for better visibility */
+  }
 .fa-compass{
     color: #fe424d;
     font-size: 2rem;
