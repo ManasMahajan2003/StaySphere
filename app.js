@@ -93,10 +93,7 @@ app.use((req,res, next)=>{
 //     res.send(registeredUser);
 // });
 
-app.get("/",async (req,res)=>{
-    const allListings = await Listing.find({});
-    res.render("listings/index.ejs",{allListings});
-})
+// .get(wrapAsync(listingController.index))
 
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews",reviewRouter);
