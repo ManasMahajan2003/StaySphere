@@ -112,7 +112,22 @@ body{
 }
 
 /* Map */
-#map { 
+/* #map { 
     height: 400px; 
     width: 80vh;
+} */
+#map {
+    height: 50vh; /* The height will be 50% of the viewport height */
+    width: 80vw;  /* The width will be 80% of the viewport width */
+    max-width: 100%; /* Ensure the width doesn't exceed the parent container */
+    max-height: 100%; /* Ensure the height doesn't exceed the parent container */
+    margin: 0 auto; /* Center the map horizontally */
+}
+
+/* Optional: Adjust map size on smaller screens */
+@media (max-width: 600px) {
+    #map {
+        height: 60vh; /* Slightly taller on smaller screens */
+        width: 90vw;  /* Slightly wider on smaller screens */
+    }
 }
