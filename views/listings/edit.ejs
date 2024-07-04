@@ -13,6 +13,22 @@
         <div class="valid-feedback">Title looks good</div>
         </div>
         <div class="mb-3">
+            <label for="category" class="form-label">Category</label>
+                <select name="listing[category]" class="form-control" required>
+                    <option value="" disabled selected>Select a category</option>
+                    <option value="trending">Trending</option>
+                    <option value="rooms">Rooms</option>
+                    <option value="iconic-cities">Iconic Cities</option>
+                    <option value="mountains">Mountains</option>
+                    <option value="castles">Castles</option>
+                    <option value="pools">Amazing pools</option>
+                    <option value="camping">Camping</option>
+                    <option value="farms">Farms</option>
+                    <option value="arctic">Arctic</option>
+                </select>
+                <div class="invalid-feedback">Please select a valid category</div>
+        </div>
+        <div class="mb-3">
             <label for="description" class="form-label">Description</label>
         <textarea name="listing[description]" class="form-control" required><%= listing.description %></textarea>
         <div class="invalid-feedback">Please enter a short description</div>

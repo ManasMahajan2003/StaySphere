@@ -93,3 +93,43 @@ module.exports.deleteListing=async(req,res)=>{
     req.flash("success","Listing Deleted");
     res.redirect("/listings");
 };
+
+module.exports.showFilterListing=async (req, res) => {
+    const filterType = req.params.filterType;
+    let filteredListings;
+  
+    switch(filterType) {
+      case 'trending':
+        filteredListings = await Listing.find({ category: 'trending' });
+        break;
+      case 'rooms':
+        filteredListings = await Listing.find({ category: 'rooms' });
+        break;
+      case 'iconic-cities':
+        filteredListings = await Listing.find({ category: 'iconic-cities' });
+        break;
+      case 'mountains':
+        filteredListings = await Listing.find({ category: 'mountains' });
+        break;
+      case 'castles':
+        filteredListings = await Listing.find({ category: 'castles' });
+        break;
+      case 'pools':
+        filteredListings = await Listing.find({ category: 'pools' });
+        break;
+      case 'camping':
+        filteredListings = await Listing.find({ category: 'camping' });
+        break;
+      case 'farms':
+        filteredListings = await Listing.find({ category: 'farms' });
+        break;
+      case 'arctic':
+        filteredListings = await Listing.find({ category: 'arctic' });
+        break;
+      default:
+        filteredListings = await Listing.find();
+        break;
+    }
+  
+    res.render('listings/index.ejs', { allListings: filteredListings });
+};

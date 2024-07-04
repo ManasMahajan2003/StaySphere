@@ -23,7 +23,7 @@ router
     .put(isLoggedIn,upload.single("listing[image]"),validateListing,wrapAsync(listingController.updateListing))
     .delete(isLoggedIn,isOwner,wrapAsync(listingController.deleteListing));
 
-
+router.route("/filter/:filterType").get(wrapAsync(listingController.showFilterListing));
 
 //Edit route
 router.get("/:id/edit",isLoggedIn, isOwner,wrapAsync(listingController.renderEditForm));

@@ -13,6 +13,7 @@ const listingSchema=new Schema({
         fiename:String,
     },
     price:Number,
+    category:String,
     location:String,
     country:String,
     reviews:[
