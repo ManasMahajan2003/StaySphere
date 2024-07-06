@@ -33,6 +33,12 @@ module.exports.showListing=async(req,res)=>{
 
 module.exports.createListing=async (req,res, next)=>{
   try {
+    // Check if req.file is defined
+    if (!req.file) {
+        throw new ExpressError(400, "Image upload is required");
+    }
+
+    // Ensure geocoding client works correctly
     let response = await geocodingClient
         .forwardGeocode({
             query: req.body.listing.location,
@@ -40,17 +46,30 @@ module.exports.createListing=async (req,res, next)=>{
         })
         .send();
 
+    // Validate geocoding response
+    if (!response.body.features || response.body.features.length === 0) {
+        throw new ExpressError(400, "Invalid location");
+    }
+
+    // Extract image data
     let url = req.file.path;
     let filename = req.file.filename;
+
+    // Create new listing
     const newListing = new Listing(req.body.listing);
     newListing.owner = req.user._id;
     newListing.image = { url, filename };
     newListing.geometry = response.body.features[0].geometry;
+
+    // Set default category if not provided
     if (!newListing.category) {
         newListing.category = 'other'; // or any default category
     }
+
+    // Save listing to database
     let savedListing = await newListing.save();
     console.log(savedListing);
+    
     req.flash("success", "New Listing Created");
     res.redirect("/listings");
 } catch (e) {
@@ -71,9 +90,6 @@ module.exports.renderEditForm=async (req,res)=>{
 };
 
 module.exports.updateListing=async (req,res)=>{
-    // if(!req.body.listing){
-    //     throw new ExpressError(400,"Send valid data for listing");
-    // }
     let {id}=req.params;
     
     let listing=await Listing.findByIdAndUpdate(id,{...req.body.listing});
