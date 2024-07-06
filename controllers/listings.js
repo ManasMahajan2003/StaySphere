@@ -38,31 +38,31 @@ module.exports.createListing = async (req, res, next) => {
           throw new ExpressError(400, "Image upload is required");
       }
 
-      // Log geocoding request
-      console.log('Geocoding request:', req.body.listing.location);
+      // // Log geocoding request
+      // console.log('Geocoding request:', req.body.listing.location);
       
-      // Ensure geocoding client works correctly
-      let response = await geocodingClient
-          .forwardGeocode({
-              query: req.body.listing.location,
-              limit: 1,
-          })
-          .send();
+      // // Ensure geocoding client works correctly
+      // let response = await geocodingClient
+      //     .forwardGeocode({
+      //         query: req.body.listing.location,
+      //         limit: 1,
+      //     })
+      //     .send();
 
       // Log geocoding response
-      console.log('Geocoding response:', response.body);
+      // console.log('Geocoding response:', response.body);
 
       // Validate geocoding response
-      if (!response.body.features || response.body.features.length === 0) {
-          throw new ExpressError(400, "Invalid location");
-      }
+      // if (!response.body.features || response.body.features.length === 0) {
+      //     throw new ExpressError(400, "Invalid location");
+      // }
 
       // Extract image data
       let url = req.file.path;
       let filename = req.file.filename;
 
       // Log image data
-      console.log('Image data:', { url, filename });
+      // console.log('Image data:', { url, filename });
 
       // Create new listing
       const newListing = new Listing(req.body.listing);
