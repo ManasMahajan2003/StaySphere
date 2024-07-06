@@ -31,51 +31,62 @@ module.exports.showListing=async(req,res)=>{
     res.render("listings/show.ejs",{listing});
 };
 
-module.exports.createListing=async (req,res, next)=>{
+module.exports.createListing = async (req, res, next) => {
   try {
-    // Check if req.file is defined
-    if (!req.file) {
-        throw new ExpressError(400, "Image upload is required");
-    }
+      // Check if req.file is defined
+      if (!req.file) {
+          throw new ExpressError(400, "Image upload is required");
+      }
 
-    // Ensure geocoding client works correctly
-    let response = await geocodingClient
-        .forwardGeocode({
-            query: req.body.listing.location,
-            limit: 1,
-        })
-        .send();
+      // Log geocoding request
+      console.log('Geocoding request:', req.body.listing.location);
+      
+      // Ensure geocoding client works correctly
+      let response = await geocodingClient
+          .forwardGeocode({
+              query: req.body.listing.location,
+              limit: 1,
+          })
+          .send();
 
-    // Validate geocoding response
-    if (!response.body.features || response.body.features.length === 0) {
-        throw new ExpressError(400, "Invalid location");
-    }
+      // Log geocoding response
+      console.log('Geocoding response:', response.body);
 
-    // Extract image data
-    let url = req.file.path;
-    let filename = req.file.filename;
+      // Validate geocoding response
+      if (!response.body.features || response.body.features.length === 0) {
+          throw new ExpressError(400, "Invalid location");
+      }
 
-    // Create new listing
-    const newListing = new Listing(req.body.listing);
-    newListing.owner = req.user._id;
-    newListing.image = { url, filename };
-    newListing.geometry = response.body.features[0].geometry;
+      // Extract image data
+      let url = req.file.path;
+      let filename = req.file.filename;
 
-    // Set default category if not provided
-    if (!newListing.category) {
-        newListing.category = 'other'; // or any default category
-    }
+      // Log image data
+      console.log('Image data:', { url, filename });
 
-    // Save listing to database
-    let savedListing = await newListing.save();
-    console.log(savedListing);
-    
-    req.flash("success", "New Listing Created");
-    res.redirect("/listings");
-} catch (e) {
-    next(e);
-}
-    };
+      // Create new listing
+      const newListing = new Listing(req.body.listing);
+      newListing.owner = req.user._id;
+      newListing.image = { url, filename };
+      newListing.geometry = response.body.features[0].geometry;
+
+      // Set default category if not provided
+      if (!newListing.category) {
+          newListing.category = 'other'; // or any default category
+      }
+
+      // Save listing to database
+      let savedListing = await newListing.save();
+      console.log('Saved listing:', savedListing);
+
+      req.flash("success", "New Listing Created");
+      res.redirect("/listings");
+  } catch (e) {
+      console.error('Error creating listing:', e);
+      next(e);
+  }
+};
+
 
 module.exports.renderEditForm=async (req,res)=>{
     let {id}=req.params;
