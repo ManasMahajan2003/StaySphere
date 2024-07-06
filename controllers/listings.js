@@ -32,32 +32,30 @@ module.exports.showListing=async(req,res)=>{
 };
 
 module.exports.createListing=async (req,res, next)=>{
-    // let { title,description, image, price, country, location}=req.body;
-    
-    // if(!req.body.listing){
-    //     throw new ExpressError(400,"Send valid data for listing");
-    // }
-    let response= await geocodingClient
+  try {
+    let response = await geocodingClient
         .forwardGeocode({
-            query:req.body.listing.location,
-            limit:1,
+            query: req.body.listing.location,
+            limit: 1,
         })
         .send();
-        
-        
-    let url=req.file.path;
-    let filename=req.file.filename;
-    const newListing=new Listing(req.body.listing);
-    newListing.owner=req.user._id;
-    newListing.image={url,filename};
-    newListing.geometry=response.body.features[0].geometry;
+
+    let url = req.file.path;
+    let filename = req.file.filename;
+    const newListing = new Listing(req.body.listing);
+    newListing.owner = req.user._id;
+    newListing.image = { url, filename };
+    newListing.geometry = response.body.features[0].geometry;
     if (!newListing.category) {
         newListing.category = 'other'; // or any default category
     }
-    let savedListing=await newListing.save();
+    let savedListing = await newListing.save();
     console.log(savedListing);
-    req.flash("success","New Listing Created");
+    req.flash("success", "New Listing Created");
     res.redirect("/listings");
+} catch (e) {
+    next(e);
+}
     };
 
 module.exports.renderEditForm=async (req,res)=>{
