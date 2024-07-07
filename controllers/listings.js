@@ -161,3 +161,20 @@ module.exports.showFilterListing=async (req, res) => {
   
     res.render('listings/index.ejs', { allListings: filteredListings });
 };
+
+module.exports.searchListings = async (req, res) => {
+  const { query } = req.query;
+  if (!query) {
+      req.flash("error", "Please enter a location");
+      return res.redirect("/listings");
+  }
+
+  const listings = await Listing.find({
+      $or: [
+          { title: new RegExp(query, 'i') },
+          { location: new RegExp(query, 'i') }
+      ]
+  });
+
+  res.render('listings/searchResults.ejs', { listings, query });
+};
