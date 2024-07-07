@@ -34,10 +34,10 @@
         <a class="nav-link" href="/listings">Explore</a>
       </div>
       <div class="navbar-nav ms-auto">
-        <form class="d-flex" role="search" action="/listings/search" method="GET">
+        <form class="d-flex" role="search" action="/listings/search" method="GET" style="position:relative">
           <input class="form-control me-2 inp-search" type="search" placeholder="Search destinations" name="query" id="search-input">
           <button class="btn btn-search" type="submit"><i class="fa-solid fa-magnifying-glass"></i>Search</button>
-          <ul id="autocomplete-results" class="list-group" style="position: absolute; z-index: 1000;"></ul>
+          <ul id="autocomplete-results" class="list-group" style="position: absolute; z-index: 1000;top:2.5rem; left:0.5rem"></ul>
         </form>
         
       </div>
@@ -86,6 +86,12 @@
           console.error(err);
         }
       });
+      document.addEventListener("click", function(event) {
+      if (!search-input.contains(event.target) && !autocomplete-results.contains(event.target)) {
+        suggestions.style.display = "none";
+      }
+    });
+
     });
   </script>
   
