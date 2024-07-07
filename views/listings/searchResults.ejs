@@ -80,7 +80,7 @@
     <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-3">
         <h1>Search Results for "<%= query %>"</h1>
         <% if (listings.length > 0) { %>
-        <% for(let listing of allListings){ %>
+            <% listings.forEach(listing => { %>
             <a href="/listings/<%= listing._id %>" class="listing-link">
             <div class="card col  listing-card" >
                 <img src="<%=listing.image.url%>" class="card-img-top" alt="listing_image" style="height: 18rem;">
@@ -93,7 +93,7 @@
                 </div>
               </div>
             </a>
-            <% } %>
+            <% }) %>
             <% } else { %>
                 <p>No listings found for "<%= query %>".</p>
             <% } %>
