@@ -16,33 +16,15 @@ body{
     background-color: #ebebeb; /* Set background color */
     padding: 10px; /* Add padding for better visibility */
   }
-  .autocomplete-suggestions {
-    position: absolute;
-    border: 1px solid #d4d4d4;
-    border-top: none;
-    z-index: 99;
-    /* Position the autocomplete items to be below the input */
-    top: 100%;
-    left: 0;
-    right: 0;
-    background-color: white;
+  #autocomplete-results {
     max-height: 200px;
     overflow-y: auto;
   }
   
-  .autocomplete-suggestion {
-    padding: 10px;
+  #autocomplete-results li {
     cursor: pointer;
-    background-color: white;
   }
   
-  .autocomplete-suggestion:hover {
-    background-color: #e9e9e9;
-  }
-  
-  .form-control.inp-search {
-    position: relative;
-  }
   
   
 .fa-compass{
