@@ -27,6 +27,10 @@ body{
     text-decoration: none;
     color: #222222;
 }
+#filters a{
+    text-decoration: none;
+    color: #222222;
+}
 .f-info-links a:hover{
     text-decoration: underline;
 }
