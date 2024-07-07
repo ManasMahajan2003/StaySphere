@@ -29,10 +29,12 @@
           <a class="nav-link" href="/listings">Explore</a>
         </div>
         <div class="navbar-nav ms-auto">
-          <form class="d-flex" role="search" action="/listings/search" method="GET"  >
-            <input class="form-control me-2 inp-search" type="search" placeholder="Search destinations" name="query"> 
+          <form class="d-flex" role="search" action="/listings/search" method="GET">
+            <input class="form-control me-2 inp-search" type="search" placeholder="Search destinations" name="query" id="search-input">
             <button class="btn btn-search" type="submit"><i class="fa-solid fa-magnifying-glass"></i>Search</button>
+            <ul id="autocomplete-results" class="list-group" style="position: absolute; z-index: 1000;"></ul>
           </form>
+          
         </div>
         <div class="navbar-nav ms-auto">
           <a class="nav-link" href="/listings/new">Airbnb your home</a>
@@ -47,3 +49,38 @@
       </div>
     </div>
   </nav>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const searchInput = document.getElementById('search-input');
+      const autocompleteResults = document.getElementById('autocomplete-results');
+  
+      searchInput.addEventListener('input', async () => {
+        const query = searchInput.value.trim();
+        if (!query) {
+          autocompleteResults.innerHTML = '';
+          return;
+        }
+  
+        try {
+          const response = await fetch(`/listings/autocomplete?query=${encodeURIComponent(query)}`);
+          const listings = await response.json();
+          autocompleteResults.innerHTML = '';
+  
+          listings.forEach(listing => {
+            const li = document.createElement('li');
+            li.classList.add('list-group-item');
+            li.textContent = `${listing.title} - ${listing.location}`;
+            li.addEventListener('click', () => {
+              searchInput.value = listing.title;
+              autocompleteResults.innerHTML = '';
+            });
+            autocompleteResults.appendChild(li);
+          });
+        } catch (err) {
+          console.error(err);
+        }
+      });
+    });
+  </script>
+  

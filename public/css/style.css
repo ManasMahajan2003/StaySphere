@@ -16,6 +16,15 @@ body{
     background-color: #ebebeb; /* Set background color */
     padding: 10px; /* Add padding for better visibility */
   }
+  #autocomplete-results {
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  
+  #autocomplete-results li {
+    cursor: pointer;
+  }
+  
 .fa-compass{
     color: #fe424d;
     font-size: 2rem;

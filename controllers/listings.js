@@ -178,3 +178,23 @@ module.exports.searchListings = async (req, res) => {
 
   res.render('listings/searchResults.ejs', { listings, query });
 };
+
+module.exports.autocomplete = async (req, res) => {
+  const { query } = req.query;
+  if (!query) {
+    return res.json([]);
+  }
+
+  const listings = await Listing.find({
+    $or: [
+      { title: new RegExp(query, 'i') },
+      { location: new RegExp(query, 'i') }
+    ]
+  }).limit(10);
+
+  res.json(listings.map(listing => ({
+    id: listing._id,
+    title: listing.title,
+    location: listing.location
+  })));
+};
