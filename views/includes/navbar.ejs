@@ -29,11 +29,12 @@
           <a class="nav-link" href="/listings">Explore</a>
         </div>
         <div class="navbar-nav ms-auto">
-          <form class="d-flex" role="search" action="/listings/search" method="GET">
-            <input class="form-control me-2 inp-search" type="search" placeholder="Search destinations" name="query" id="search-input">
+          <form class="d-flex position-relative" role="search" action="/listings/search" method="GET">
+            <input id="searchBox" class="form-control me-2 inp-search" type="search" name="query" placeholder="Search destinations">
+            <div id="suggestions" class="autocomplete-suggestions"></div>
             <button class="btn btn-search" type="submit"><i class="fa-solid fa-magnifying-glass"></i>Search</button>
-            <ul id="autocomplete-results" class="list-group" style="position: absolute; z-index: 1000;"></ul>
           </form>
+          
           
         </div>
         <div class="navbar-nav ms-auto">
@@ -49,38 +50,55 @@
       </div>
     </div>
   </nav>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    let searchBox = document.getElementById("searchBox");
+    let suggestions = document.getElementById("suggestions");
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const searchInput = document.getElementById('search-input');
-      const autocompleteResults = document.getElementById('autocomplete-results');
-  
-      searchInput.addEventListener('input', async () => {
-        const query = searchInput.value.trim();
-        if (!query) {
-          autocompleteResults.innerHTML = '';
-          return;
+    searchBox.addEventListener("input", async function() {
+        let query = searchBox.value;
+
+        if (query.length > 2) { // start searching after 3 characters
+            try {
+                let response = await fetch(`/listings/search?query=${query}`);
+                let results = await response.json();
+
+                suggestions.innerHTML = "";
+                suggestions.style.display = "block";
+
+                if (results.length > 0) {
+                    results.forEach(result => {
+                        let suggestion = document.createElement("div");
+                        suggestion.classList.add("autocomplete-suggestion");
+                        suggestion.innerText = result.title;
+                        suggestion.addEventListener("click", function() {
+                            searchBox.value = result.title;
+                            suggestions.innerHTML = "";
+                            suggestions.style.display = "none";
+                        });
+                        suggestions.appendChild(suggestion);
+                    });
+                } else {
+                    let noResult = document.createElement("div");
+                    noResult.classList.add("autocomplete-suggestion");
+                    noResult.innerText = "No results found";
+                    suggestions.appendChild(noResult);
+                }
+            } catch (error) {
+                console.error("Error fetching search results:", error);
+            }
+        } else {
+            suggestions.innerHTML = "";
+            suggestions.style.display = "none";
         }
-  
-        try {
-          const response = await fetch(`/listings/autocomplete?query=${encodeURIComponent(query)}`);
-          const listings = await response.json();
-          autocompleteResults.innerHTML = '';
-  
-          listings.forEach(listing => {
-            const li = document.createElement('li');
-            li.classList.add('list-group-item');
-            li.textContent = `${listing.title} - ${listing.location}`;
-            li.addEventListener('click', () => {
-              searchInput.value = listing.title;
-              autocompleteResults.innerHTML = '';
-            });
-            autocompleteResults.appendChild(li);
-          });
-        } catch (err) {
-          console.error(err);
-        }
-      });
     });
-  </script>
+
+    // Hide suggestions when clicking outside
+    document.addEventListener("click", function(event) {
+        if (!searchBox.contains(event.target) && !suggestions.contains(event.target)) {
+            suggestions.style.display = "none";
+        }
+    });
+});
+</script>
   
